@@ -4,6 +4,40 @@
   font-family: 'Gruppo', cursive;
   font-weight: 200; }
 
+#contact-list-view {
+  margin-top: 3em;
+  border: 0px solid; }
+
+#chat-view {
+  margin-top: 1em;
+  border: 1px solid;
+  border-color: lightgrey;
+  padding: 0; }
+  #chat-view .page-header {
+    padding: 0.2em; }
+  #chat-view #msg-view {
+    padding: 0.5em;
+    min-height: 5em;
+    height: 30em; }
+    #chat-view #msg-view #msg {
+      display: block; }
+  #chat-view #text-entry-view {
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    border-top: 1px solid;
+    border-color: lightgrey;
+    min-height: 2em;
+    line-height: 2em;
+    font-size: 1em;
+    white-space: normal;
+    overflow-y: hidden; }
+  #chat-view #text-entry-view:focus {
+    outline: 0px solid transparent; }
+
+#active-chat-view {
+  margin-top: 1em;
+  border: 0px solid; }
+
 .nav-sidebar > .active > a,
 .nav-sidebar > .active > a:hover,
 .nav-sidebar > .active > a:focus {
