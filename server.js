@@ -7,13 +7,15 @@
 	var app = express();
 	var path = require('path');
     
+    //var http = require('http').Server(app);
+    //var io = require('socket.io')(http);
+    
 	
 	app.use('/static', express.static(__dirname + '/static'));
 	app.use('/templates', express.static(__dirname + '/templates'));
     app.use('/vendor', express.static(__dirname + '/static/vendor'));
 	
 	app.get('/', function(req, res){
-		console.log(__dirname);
 		res.sendFile(__dirname + '/templates/index.html');
 	});
 	
@@ -47,8 +49,73 @@
         });
     });
 	
-	app.listen('3200', function(){
+    
+    
+	var server = app.listen('3200', function(){
 		console.log("Listening @ " + 3200)
 	});
+    
+    // Socket.io
+    
+    //-------------------------------------------
+    
+    var activeUsers = [];
+    var activeSockets = [];
+    
+    var io = require('socket.io').listen(server);
+    
+    io.on('connection', function(socket){
+        var client = socket.id;
+        console.log(client + " connected");
+        
+        socket.on('disconnect', function(){
+            console.log(socket.id + " disconnected");
+        });
+        
+        socket.on('login', function(msg){
+            console.log("---------------------------------------");
+            console.log("User " + msg.username + " logged in");
+            console.log("---------------------------------------");
+            activeUsers.push(msg.username);
+            activeSockets.push(socket);
+        });
+        
+        socket.on('logout', function(msg){
+            console.log("---------------------------------------");
+            console.log("User " + msg.username + " logged out");
+            console.log("---------------------------------------");
+            var activeUserAt = activeUsers.indexOf(msg.username);
+            activeUsers.slice(activeUserAt, 1);
+            activeSockets.slice(activeUserAt, 1);
+        });
+        
+        socket.on('handshake', function(msgObj){
+            console.log(msgObj);
+            var chatIsPossible = false;
+            console.log(activeUsers);
+            console.log(activeUsers.indexOf(msgObj.askingFor));
+            if (activeUsers.indexOf(msgObj.askingFor) !== -1){
+                chatIsPossible = true;
+            }
+            var handshake_ack = {
+                sendFrom: 'server',
+                sendTo: msgObj.sendFrom,
+                msgType: 'HANDSHAKE_ACK',
+                chatIsPossible: chatIsPossible
+            };
+            socket.emit('handshake_ack', handshake_ack);
+        });
+        
+        socket.on('chat', function(msgObj){
+            var sendTo = msgObj.sendTo;
+            console.log(sendTo);
+            console.log(activeUsers.indexOf(sendTo));
+            var sendToSocket = activeSockets[activeUsers.indexOf(sendTo)];
+            sendToSocket.emit('chat', msgObj)
+        });
+        
+    });
+    
+    
 	
 })();

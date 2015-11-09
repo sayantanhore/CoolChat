@@ -35,15 +35,22 @@ $activeItemBackgroundColour: #428bca;
         padding-left: 0.5em;
         padding-right: 0.5em;
         border-top: 1px solid;
+        border-bottom: 1px solid;
         border-color: lightgrey;
-        min-height: 2em;
-        line-height: 2em;
-        font-size: 1em;
+        min-height: 2.5em;
+        max-height: 2.5em;
+        line-height: 2.5em;
+        font-size: 1.3em;
         white-space: normal;
-        overflow-y: hidden;
+        overflow-y: scroll;
     }
     #text-entry-view:focus{
         outline: 0px solid transparent;
+    }
+    .btn-block{
+        -webkit-border-radius: 0;
+        -moz-border-radius: 0;
+        border-radius: 0;
     }
 }
 #active-chat-view{

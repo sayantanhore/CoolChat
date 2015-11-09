@@ -64,3 +64,38 @@ coolchatApp.service('$validateContact', function($http, $ManageLoggedInUsername)
         }
     }
 });
+
+coolchatApp.service('$socket', function(){
+    var socket = io('http://127.0.0.1:3200/');
+    socket.on('login', function(msg){
+        console.log(msg);
+    });
+    socket.on('handshake_ack', function(msg){
+        console.log(msg);
+    });
+    socket.on('chat', function(msgObj){
+        console.log("Server says " + msgObj.msg);
+        var existingMsg = $("div#msg-view").html();
+        var newHtml = existingMsg + "<p class = 'msg'>" + msgObj.msg + "</p>";
+        $("div#msg-view").html(newHtml);
+        $("div#text-entry-view").html("");
+    });
+    
+    return {
+        getSocket: function(){
+            return socket;
+        },
+        emitLogin: function(msgObj){
+            socket.emit('login', msgObj)
+        },
+        emitLogout: function(msgObj){
+            socket.emit('logout', msgObj)
+        },
+        emitHandshake: function(msgObj){
+            socket.emit('handshake', msgObj);
+        },
+        emitChat: function(msgObj){
+            socket.emit('chat', msgObj);
+        }
+    }
+});
